@@ -9,8 +9,9 @@ struct ServiceError: Error {
     let errorMessage: String
     let reason: Reason
     init(dto: ServiceErrorDTO){
-        self.errorMessage = dto.errorMessage
+        
         self.reason = Reason(rawValue: dto.statusCode) ?? .generic
+        self.errorMessage = self.reason.message
     }
     
 }
@@ -22,5 +23,23 @@ extension ServiceError {
         case notFound = 404
         case internalServiceError = 500
         case generic = 0
+        
+        var message : String {
+            switch self {
+            case .badRequest:
+                "Ocurrio un error en la peticion"
+            case .unauthorized:
+                "La sesion no esta autorizzada"
+            case .forbidden:
+                "nose puede trabajar"
+            case .notFound:
+                "no se encontro"
+            case .internalServiceError:
+                "Error interno el sistema"
+            case .generic:
+                "Ocurrio un error"
+            }
+        }
     }
+    
 }
