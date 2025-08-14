@@ -6,7 +6,52 @@
 //
 import Combine
 
+
 protocol MovieInteractorProtocol {
-    func list() -> AnyPublisher<>
+    func list() -> AnyPublisher<[Results], ServiceError>
+    func getDetailTo(_ movieId: Int) -> AnyPublisher<DetailMovie,ServiceError>
 }
-struct MovieInteractor:
+
+struct MovieInteractor: MovieInteractorProtocol {
+    
+    private let moviesService : MoviesServiceProtocol
+    private let movieDetailServices : MovieDetailServicesProtocol
+    
+    
+    init (moviesService: MoviesServiceProtocol, movieDetailServices: MovieDetailServicesProtocol) {
+        self.moviesService = moviesService
+        self.movieDetailServices = movieDetailServices
+    }
+    func list() -> AnyPublisher<[Results], ServiceError>{
+        self.moviesService
+            .execute()
+            .map({ arrayResultsDTO in
+                    arrayResultsDTO.map({ resultDTO in
+                    Results(dto: resultDTO)
+                })
+            })
+            .mapServicesError()
+            .eraseToAnyPublisher()
+    }
+    
+    func getDetailTo(_ movieId: Int) -> AnyPublisher<DetailMovie,ServiceError> {
+        self.movieDetailServices
+            .execute(movieId)
+            .map {DetailMovie(dto: $0) }
+            .mapServicesError()
+            .eraseToAnyPublisher()
+    }
+}
+
+
+extension MovieInteractor {
+    static func build(_ typeData: TypeData) -> MovieInteractor {
+        switch typeData {
+        case .real:
+            MovieInteractor(moviesService: MoviesService(), movieDetailServices: MovieDetailServices())
+        case .mock:
+            MovieInteractor(moviesService: MoviesServiceMock(), movieDetailServices: MovieDetailServicesMock())
+        }
+    }
+}
+

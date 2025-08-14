@@ -10,7 +10,7 @@ import Foundation
 struct MovieDTO: Decodable{
     
     let page: Int?
-    let results: ResultsDTO?
+    let results: [ResultsDTO]?
     let total_pages: Int?
     let total_results: Int?
     
@@ -22,7 +22,7 @@ extension MovieDTO {
     
     static var mock: MovieDTO{
         MovieDTO(page: 1,
-                 results: .mock,
+                 results: [ResultsDTO.mock],
                  total_pages: 51482,
                  total_results: 1029638)
     }

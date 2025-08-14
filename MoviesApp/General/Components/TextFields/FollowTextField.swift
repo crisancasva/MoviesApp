@@ -18,6 +18,7 @@ struct FollowTextField: View {
             .onEditingChanged(self.onEditingChanged)
             .leftView(AnyView(self.iconButton))
             .backgroundColor(.neutral100)
+            .autocorrectionDisabled()
         
     }
     init(text: Binding<String>) {
@@ -31,6 +32,7 @@ struct FollowTextField: View {
     }
     private var iconButton: some View {
         Image(systemName: "magnifyingglass")
+        
            
     }
 }

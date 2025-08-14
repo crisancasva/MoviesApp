@@ -1,0 +1,28 @@
+//
+//  DateManager.swift
+//  MoviesApp
+//
+//  Created by Cristhian Andres Castano Vallejo on 23/07/25.
+//
+
+import Foundation
+
+
+extension String {
+    func toDateWith(_ format: String) -> Date?{
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        dateFormatter.locale = Locale(identifier: "es_CO")
+        return dateFormatter.date(from: self)
+    }
+}
+
+extension Date {
+    func toStringWith(_ format: String) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        dateFormatter.locale = Locale(identifier: "es_CO")
+        return dateFormatter.string(from: self)
+    }
+}
+

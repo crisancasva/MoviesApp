@@ -4,14 +4,29 @@
 //
 //  Created by Cristhian Andres Castano Vallejo on 15/07/25.
 //
+import Combine
 
 struct ServiceError: Error {
-    let errorMessage: String
+    
     let reason: Reason
+    
+    var errorMessage: String {
+        self.messages[self.reason] ?? "Ocurrio un error en la peticion"
+    }
+    
+    private let messages: [Reason: String] = [
+        .badRequest: "Ocurrio un error en la peticion",
+        .unauthorized: "La sesion no esta autorizzada",
+        .forbidden: "no se puede trabajar",
+        .notFound:  "no se encontro",
+        .internalServiceError: "Error interno el sistema",
+        .generic: "Ocurrio un error"
+    ]
+    
     init(dto: ServiceErrorDTO){
         
         self.reason = Reason(rawValue: dto.statusCode) ?? .generic
-        self.errorMessage = self.reason.message
+        
     }
     
 }
@@ -23,23 +38,16 @@ extension ServiceError {
         case notFound = 404
         case internalServiceError = 500
         case generic = 0
-        
-        var message : String {
-            switch self {
-            case .badRequest:
-                "Ocurrio un error en la peticion"
-            case .unauthorized:
-                "La sesion no esta autorizzada"
-            case .forbidden:
-                "nose puede trabajar"
-            case .notFound:
-                "no se encontro"
-            case .internalServiceError:
-                "Error interno el sistema"
-            case .generic:
-                "Ocurrio un error"
-            }
-        }
+               
     }
     
 }
+
+extension Publisher where Failure == ServiceErrorDTO {
+    func mapServicesError() -> Publishers.MapError<Self, ServiceError>{
+        self.mapError { error in
+           ServiceError(dto: error)
+        }
+    }
+}
+

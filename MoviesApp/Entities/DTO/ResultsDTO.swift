@@ -5,8 +5,6 @@
 //  Created by Cristhian Andres Castano Vallejo on 19/07/25.
 //
 
-import Foundation
-
 struct ResultsDTO: Decodable{
     
     let adult: Bool?

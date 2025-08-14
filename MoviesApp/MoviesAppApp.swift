@@ -12,9 +12,11 @@ struct MoviesAppApp: App {
    
 
     var body: some Scene {
-        WindowGroup {
-            ContentView()
-               
+            WindowGroup {
+                ZStack {
+                    NavigatorView(root: LoginView.build())
+                    
+                }
+            }
         }
-    }
 }

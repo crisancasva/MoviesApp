@@ -1,26 +1,36 @@
 //
-//  Results.swift
+//  DetailMovie.swift
 //  MoviesApp
 //
-//  Created by Cristhian Andres Castano Vallejo on 19/07/25.
+//  Created by Cristhian Andres Castano Vallejo on 6/08/25.
 //
 
 import Foundation
 
-struct Results: Identifiable, Equatable {
-    
-    let idi = UUID()
-    let adult: Bool
-    let backdrop_path: String
-    let genre_ids: [Int]
-    let id : Int
-    let original_language : String
-    let original_title : String
-    let overview : String
-    let popularity : Double
-    private let poster_path : String
-    private let release_date : Date?
-    let title : String
+struct DetailMovie: Identifiable, Equatable {
+    let idD = UUID()
+    let adult : Bool
+    let backdrop_path : String
+    let budget : Int
+    let genres : [GenresDTO]
+    let homepage : String
+    let id: Int
+    let imdb_id : String
+    let origin_country : [String]
+    let original_language: String
+    let original_title: String
+    let overview: String
+    let popularity: Int
+    private let poster_path: String
+    let production_companies: [CompaniesDTO]
+    let production_countries: [ProductionCountriesDTO]
+    private let release_date: Date?
+    let revenue: Int
+    let runtime: Int
+    let spoken_languages: [LanguagesDTO]
+    let status: String
+    let tagline: String
+    let title: String
     let video: Bool
     let vote_average: Double
     let vote_count : Int
@@ -40,9 +50,6 @@ struct Results: Identifiable, Equatable {
         }
         return nil
     }
-    
-    
-    
     var popularityFormat : String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -60,7 +67,7 @@ struct Results: Identifiable, Equatable {
     var releaseDateFullFormat: String {
         self.release_date?.toStringWith("EEEE 'de' MMMM 'del' yyyy") ?? "Proximamente"
     }
-   
+    
     var voteAverageFormat : String {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
@@ -69,19 +76,29 @@ struct Results: Identifiable, Equatable {
         return formatter.string(from: NSNumber(value: self.vote_average)) ?? "Sin especificar"
     }
     
-    
-    init(dto: ResultsDTO){
+    init(dto: MovieDetailDTO){
         
         self.adult = dto.adult ?? false
         self.backdrop_path = dto.backdrop_path ?? ""
-        self.genre_ids = dto.genre_ids ?? []
+        self.budget = dto.budget ?? 0
+        self.genres = dto.genres ?? []
+        self.homepage = dto.homepage ?? ""
         self.id = dto.id ?? 0
+        self.imdb_id = dto.imdb_id ?? ""
+        self.origin_country = dto.origin_country ?? []
         self.original_language = dto.original_language ?? ""
         self.original_title = dto.original_title ?? ""
         self.overview = dto.overview ?? ""
-        self.popularity = dto.popularity ?? 0.0
+        self.popularity = dto.popularity ?? 0
         self.poster_path = dto.poster_path ?? ""
+        self.production_companies = dto.production_companies ?? []
+        self.production_countries = dto.production_countries ?? []
         self.release_date = dto.release_date?.toDateWith("yyyy-mm-dd")
+        self.revenue = dto.revenue ?? 0
+        self.runtime = dto.runtime ?? 0
+        self.spoken_languages = dto.spoken_languages ?? []
+        self.status = dto.status ?? ""
+        self.tagline = dto.tagline ?? ""
         self.title = dto.title ?? ""
         self.video = dto.video ?? false
         self.vote_average = dto.vote_average ?? 0.0
@@ -90,7 +107,7 @@ struct Results: Identifiable, Equatable {
         
         
     }
-    static func == (lhs: Results, rhs: Results) -> Bool {
+    static func == (lhs: DetailMovie, rhs: DetailMovie) -> Bool {
         return lhs.id == rhs.id
         
     }

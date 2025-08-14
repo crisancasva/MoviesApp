@@ -17,7 +17,7 @@ struct ServiceErrorDTO: Error {
 }
 
 extension Publisher where Failure == Error {
-    func mapServicesDTO() -> Publishers.MapError<Self, ServiceErrorDTO>{
+    func mapServicesErrorDTO() -> Publishers.MapError<Self, ServiceErrorDTO>{
         self.mapError { error in
             guard let error = error as? ServiceErrorDTO else {
                 return ServiceErrorDTO(statusCode: 0)
