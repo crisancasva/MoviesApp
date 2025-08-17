@@ -34,10 +34,15 @@ struct MovieInteractor: MovieInteractorProtocol {
             .eraseToAnyPublisher()
     }
     
-    func getDetailTo(_ movieId: Int) -> AnyPublisher<DetailMovie,ServiceError> {
-        self.movieDetailServices
+    func getDetailTo(_ movieId: Int) -> AnyPublisher<DetailMovie, ServiceError> {
+        print("🎯 [getDetailTo] Solicitando detalle para movieId: \(movieId)")
+        
+        return self.movieDetailServices
             .execute(movieId)
-            .map {DetailMovie(dto: $0) }
+            .map { dto in
+                print("✅ [getDetailTo] DTO recibido: \(dto)")
+                return DetailMovie(dto: dto)
+            }
             .mapServicesError()
             .eraseToAnyPublisher()
     }

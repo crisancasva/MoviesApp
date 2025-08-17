@@ -19,8 +19,10 @@ struct LoginView: View {
                 self.userTextField
                 self.passwordTextField
                 self.saveSessionOption
-                self.recoverPasswordButton
                 self.loginButton
+                self.recoverPasswordButton
+                self.newUser
+                
             }
         }
     }
@@ -60,6 +62,16 @@ extension LoginView {
     private var recoverPasswordButton: some View {
         HStack {
             LinkButton(title: "¿Olvidaste tu constraseña?")
+                .onClick {
+                    
+                }
+            Spacer()
+        }
+    }
+    
+    private var newUser: some View {
+        HStack{
+            LinkButton(title: "Registrar Usuario")
                 .onClick {
                     
                 }

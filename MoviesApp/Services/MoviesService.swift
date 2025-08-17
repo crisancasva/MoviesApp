@@ -17,19 +17,17 @@ struct MoviesService: MoviesServiceProtocol {
     private var  url : String {
         "https://api.themoviedb.org/3/movie/popular?api_key=176de15e8c8523a92ff640f432966c9c&language=es"
     }
-    func execute() -> AnyPublisher<[ResultsDTO], ServiceErrorDTO>{
-        
+    func execute() -> AnyPublisher<[ResultsDTO], ServiceErrorDTO> {
         AF.request(self.url,
                    method: .get,
                    encoding: JSONEncoding.default)
-        .publishData()
-
-        .tryMap { responseData in
-            let movieDTO: MovieDTO = try serviceParse.decode(responseData)
-            return movieDTO.results ?? []
-        }
-        .mapServicesErrorDTO()
-        .eraseToAnyPublisher()
+            .publishData()
+            .tryMap { responseData in
+                let movieDTO: MovieDTO = try ServiceParse.decode(responseData)
+                return movieDTO.results ?? []
+            }
+            .mapServicesErrorDTO()
+            .eraseToAnyPublisher()
     }
 }
 

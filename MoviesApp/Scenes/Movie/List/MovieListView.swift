@@ -47,13 +47,15 @@ extension MovieListView {
 extension MovieListView {
     static func build() -> some View {
         let interactor = MovieInteractor.build(.real)
-        let viewModel = MovieListViewModel(interactor: interactor)
+        let searchInteractor = SearchInteractor.build(.real)
+        let viewModel = MovieListViewModel(interactor: interactor, searchInteractor: searchInteractor)
         return MovieListView(viewModel: viewModel)
             
     }
     static func buildMock() -> some View{
-        let interactor = MovieInteractor.build(.mock)
-        let viewModel = MovieListViewModel(interactor: interactor)
+        let interactor = MovieInteractor.build(.real)
+        let searchInteractor = SearchInteractor.build(.real)
+        let viewModel = MovieListViewModel(interactor: interactor, searchInteractor: searchInteractor)
         let view = MovieListView(viewModel: viewModel)
         return view
     }

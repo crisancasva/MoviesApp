@@ -29,7 +29,7 @@ extension DetailView {
         self.contentView{
                 self.movieInfoView {
                     
-                        AsyncImage(url: movie.urlPoster_path) { image in
+                        AsyncImage(url: movie.urlBackdrop_path) { image in
                             image
                                 .resizable()
                                 .frame(width: 300, height: 200)
@@ -76,7 +76,8 @@ extension DetailView {
         VStack(alignment: .leading, spacing: Spacing._xs) {
             view()
         }
-    }  
+    }
+    
 }
 
 extension DetailView {

@@ -20,7 +20,7 @@ struct DetailMovie: Identifiable, Equatable {
     let original_language: String
     let original_title: String
     let overview: String
-    let popularity: Int
+    let popularity: Double
     private let poster_path: String
     let production_companies: [CompaniesDTO]
     let production_countries: [ProductionCountriesDTO]

@@ -16,12 +16,15 @@ class MovieListViewModel: ObservableObject {
     @Published private var movies: [Results] = []
     
     private let interactor: MovieInteractorProtocol
+    private let searchInteractor: SearchInteractorProtocol
+    
     private var task: AnyCancellable?
     private var taskFiltered = Set<AnyCancellable>()
     
     
-    init(interactor: MovieInteractorProtocol) {
+    init(interactor: MovieInteractorProtocol, searchInteractor: SearchInteractorProtocol) {
         self.interactor = interactor
+        self.searchInteractor = searchInteractor
         self.filtered()
     }
     
@@ -63,21 +66,27 @@ extension MovieListViewModel{
     }
     
     private func filtered() {
-        Publishers.CombineLatest($movies, $searchText)
-         
-            .drop(while: { [weak self] _ in
-                self?.status == .loading
-            })
-            .map { list, query -> [Results] in
-                guard !query.isEmpty else {return list}
-                return list.filter { $0.original_title.replacingOccurrences(of: " ", with: "")
-                    .localizedCaseInsensitiveContains(query) }
-            }
-
-            .sink { [weak self] moviesFiltered in
-                self?.status = moviesFiltered.isEmpty ? .empty(message: "No se encontro la pelicula: \n\(self?.searchText ?? "")") : .data(items: moviesFiltered)
-            }
-            .store(in: &taskFiltered)
+        $searchText
+                .debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
+                .removeDuplicates()
+                .flatMap { [weak self] query -> AnyPublisher<[Results], Never> in
+                    guard let self = self else { return Just([]).eraseToAnyPublisher() }
+                    if query.isEmpty {
+                        return self.interactor.list()
+                            .catch { _ in Just([]) }
+                            .eraseToAnyPublisher()
+                    } else {
+                        return self.searchInteractor.search(query)
+                            .catch { _ in Just([]) }
+                            .eraseToAnyPublisher()
+                    }
+                }
+                .sink { [weak self] movies in
+                    self?.status = movies.isEmpty
+                        ? .empty(message: "No se encontró la película: \(self?.searchText ?? "")")
+                        : .data(items: movies)
+                }
+                .store(in: &taskFiltered)
     }
 }
 

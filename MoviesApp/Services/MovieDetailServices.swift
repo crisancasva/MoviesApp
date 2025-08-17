@@ -14,25 +14,33 @@ protocol MovieDetailServicesProtocol {
     func execute(_ idMovie: Int) -> AnyPublisher<MovieDetailDTO, ServiceErrorDTO>
 }
 
-struct MovieDetailServices: MovieDetailServicesProtocol  {
-    private var  url : String {
-        "https://api.themoviedb.org/3/movie/803796?api_key=176de15e8c8523a92ff640f432966c9c&language=es"
-    }
-    func execute(_ idMovie: Int) -> AnyPublisher<MovieDetailDTO, ServiceErrorDTO>{
-        
-        AF.request(self.url,
-                   method: .get,
-                   encoding: JSONEncoding.default)
-        .publishData()
+struct MovieDetailServices: MovieDetailServicesProtocol {
+    
+    func execute(_ idMovie: Int) -> AnyPublisher<MovieDetailDTO, ServiceErrorDTO> {
+        let url = "https://api.themoviedb.org/3/movie/\(idMovie)?api_key=176de15e8c8523a92ff640f432966c9c&language=es"
 
-        .tryMap { responseData in
-            try serviceParse.decode(responseData)
-        }
-        .mapServicesErrorDTO()
-        .eraseToAnyPublisher()
+        return AF.request(url, method: .get)
+            .validate()
+            .publishData()
+            .tryMap { response in
+                
+                if let data = response.data {
+                    print("📦 [MovieDetailServices] Bytes recibidos:", data.count)
+                    if let jsonString = String(data: data, encoding: .utf8) {
+                        print("📝 [MovieDetailServices] Respuesta JSON:\n", jsonString)
+                    }
+                } else {
+                    print("⚠️ [MovieDetailServices] No se recibió data")
+                    throw ServiceErrorDTO(statusCode: response.response?.statusCode ?? -1)
+                }
+                
+                return try ServiceParse.decode(response) as MovieDetailDTO
+            }
+            .mapServicesErrorDTO()
+            .eraseToAnyPublisher()
     }
+
 }
-
 
 struct MovieDetailServicesMock: MovieDetailServicesProtocol {
     func execute(_ idMovie: Int) -> AnyPublisher<MovieDetailDTO, ServiceErrorDTO>{

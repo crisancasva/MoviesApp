@@ -31,7 +31,6 @@ struct DetailViewCell: View {
                 self.titleLabel
                 self.releaseDate
                 self.dateLabel
-                self.voteAverage
                 self.votes
             }
         }.padding(.leading, 20)
@@ -40,15 +39,16 @@ struct DetailViewCell: View {
     private var titleLabel: some View {
         
         TextTitle(text: self.movie.original_title, type: .small)
+            .padding(.bottom)
     }
     private var dateLabel: some View {
         TextLabel(text: self.movie.releaseDateShortFormat)
+            
+        
     }
     private var releaseDate: some View{
         TextLabel(text: "Fecha Lanzamiento")
-    }
-    private var voteAverage: some View {
-        TextLabel(text: "Votos promedio: \(self.movie.voteAverageFormat)")
+            
     }
     private var imagePoster: some View {
         AsyncImage(url: movie.urlPoster_path) { image in
@@ -75,8 +75,6 @@ struct DetailViewCell: View {
                     .foregroundColor(.yellow)
             }
         }
-    
-        .padding()
     }
 }
 

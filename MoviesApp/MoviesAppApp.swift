@@ -14,7 +14,7 @@ struct MoviesAppApp: App {
     var body: some Scene {
             WindowGroup {
                 ZStack {
-                    NavigatorView(root: LoginView.build())
+                    NavigatorView(root: HomeView.build())
                     
                 }
             }

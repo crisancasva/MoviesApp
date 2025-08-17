@@ -44,6 +44,7 @@ extension MovieDetailViewModel {
                 defer {self?.task = nil }
                 if case .failure(let error) = completion {
                     self?.status = .error(message: error.errorMessage)
+                    print(error.errorMessage)
                 }
             } receiveValue: { [weak self] movie in
                 self?.status = .data(item: movie)
