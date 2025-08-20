@@ -11,8 +11,8 @@ struct HomeView: View {
     
     var body: some View {
         TabBarViewApp(items: [
-            TabBarViewApp.Item(view: AnyView(MovieListView.build()), icon: Image(systemName: "list.bullet"), title: "Home"),
-            TabBarViewApp.Item(view: AnyView(DetailView.buildMock(999)), icon: Image(systemName: "richtext.page.fill"), title: "Favoritos")
+            TabBarViewApp.Item(view: AnyView(MovieView.buildWeb()), icon: Image(systemName: "square.grid.2x2.fill"), title: "Home"),
+            TabBarViewApp.Item(view: AnyView(MovieView.buildDB()), icon: Image(systemName: "star.fill"), title: "Favoritos")
         ])
     }
 }

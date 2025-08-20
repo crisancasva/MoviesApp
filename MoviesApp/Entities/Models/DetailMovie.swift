@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUICore
 
 struct DetailMovie: Identifiable, Equatable {
     let idD = UUID()
@@ -21,7 +22,7 @@ struct DetailMovie: Identifiable, Equatable {
     let original_title: String
     let overview: String
     let popularity: Double
-    private let poster_path: String
+    let poster_path: String
     let production_companies: [CompaniesDTO]
     let production_countries: [ProductionCountriesDTO]
     private let release_date: Date?
@@ -76,6 +77,21 @@ struct DetailMovie: Identifiable, Equatable {
         return formatter.string(from: NSNumber(value: self.vote_average)) ?? "Sin especificar"
     }
     
+    func formattedGenresView() -> some View {
+        TextCaption(text: self.genres.compactMap { $0.name }.joined(separator: " • "))
+                .foregroundColor(.neutral1000)
+                .padding(.top, 5)
+                .padding(.horizontal, Spacing._lg)
+    }
+    var formattedOverview: some View {
+        TextCaption(text: self.overview, color: .neutral1000)
+            .lineLimit(nil)
+            .lineSpacing(5)
+            .padding(.horizontal, Spacing._lg)
+            .padding(.top, 5) //
+            .fixedSize(horizontal: false, vertical: true)
+    }
+    
     init(dto: MovieDetailDTO){
         
         self.adult = dto.adult ?? false
@@ -111,4 +127,5 @@ struct DetailMovie: Identifiable, Equatable {
         return lhs.id == rhs.id
         
     }
+    
 }

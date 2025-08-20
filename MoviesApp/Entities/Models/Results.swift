@@ -95,3 +95,13 @@ struct Results: Identifiable, Equatable {
         
     }
 }
+
+extension Results: MovieEntity {
+    var posterPath: String? {
+        poster_path    }
+    
+    var releaseDate: String? {
+        releaseDateShortFormat    }
+    
+    
+}

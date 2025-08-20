@@ -26,42 +26,68 @@ struct DetailView: View {
 extension DetailView {
 
     func movieDetailContent(_ movie: DetailMovie) -> some View {
-        self.contentView{
+            self.contentView{
                 self.movieInfoView {
-                    
+                    ZStack{
                         AsyncImage(url: movie.urlBackdrop_path) { image in
                             image
                                 .resizable()
-                                .frame(width: 300, height: 200)
-                                .aspectRatio(contentMode: .fill)
+                                .scaledToFill()
+                                .frame(maxWidth: .infinity, maxHeight: 200)
+                                .clipped()
+                                .blur(radius: 28)
                         } placeholder: {
-                            Color.gray.opacity(0.3)
+                            Color.neutral200
+                                .frame(maxWidth: .infinity, maxHeight: 250)
                         }
-                        
-                        .clipped()
-                        .cornerRadius(15)
-                        VStack(alignment: .leading){
-                            TextTitle(text: movie.original_title, type: .small)
-                            TextBody(text: movie.overview, color: .neutral1000)
-                            TextLabel(text: "Fecha Lanzamiento")
-                            TextLabel(text: movie.releaseDateShortFormat)
-                            TextLabel(text: "Votos promedio: \(movie.voteAverageFormat)")
-                            let votes = Int((movie.vote_average / 1.0).rounded())
-                            
-                            HStack{
-                                ForEach(1..<10) { index in
-                                    Image(systemName: index < votes ? "star.fill" : "star")
-                                        .resizable()
-                                        .frame(width: 20, height: 20)
-                                        .foregroundColor(.yellow)
+                        HStack{
+                            AsyncImage(url: movie.urlPoster_path) { image in
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 130, height: 180)
+                                    .clipped()
+                            } placeholder: {
+                                Color.neutral200
+                                    .frame(width: 130, height: 180)
+                            }
+                            VStack(alignment: .leading){
+                                TextTitle(text: movie.original_title, type: .small, color: .neutral0)
+                                TextLabel(text: "Fecha Lanzamiento", color: .neutral0)
+                                TextLabel(text: movie.releaseDateShortFormat, color: .neutral0)
+                                TextLabel(text: "Votos promedio: \(movie.voteAverageFormat)", color: .neutral0)
+                                let votes = Int((movie.vote_average / 1.0).rounded())
+                                
+                                HStack{
+                                    ForEach(1..<10) { index in
+                                        Image(systemName: index < votes ? "star.fill" : "star")
+                                            .resizable()
+                                            .frame(width: 15, height: 15)
+                                            .foregroundColor(.yellow)
+                                    }
                                 }
                             }
-                        
+                        }
+                    }
+                        VStack(alignment: .leading){
+                            TextLabel(text: "Generos:")
+                                .padding(.leading)
+                            movie.formattedGenresView()
+                            TextLabel(text: "Descripcíon")
+                                .padding(.top)
+                                .padding(.leading)
+                            movie.formattedOverview
+                            
+                            Toggle(isOn: self.$viewModel.isFavorite) {
+                                Text("Añadir a favoritos")
+                            }
+                            .onChange(of: self.viewModel.isFavorite) { _ in
+                                self.viewModel.toggleFavorite()
+                            }
                             .padding()
                         }
                     }
                     Spacer()
-                    
         }
     }
     private func contentView(@ViewBuilder view:@escaping () -> some View) -> some View {
@@ -85,7 +111,7 @@ extension DetailView {
         let interactor = MovieInteractor.build(.real)
         let viewModel = MovieDetailViewModel(movieId: movieId, interactor: interactor)
         let view = DetailView(viewModel: viewModel)
-            .navigatorBarStyle(.titleWithBack("DEtalle Pelicula"))
+            .navigatorBarStyle(.titleWithBack("Detalle Pelicula"))
         return NavigatorScreen(view: view)
     }
     static func buildMock(_ movieId: Int) -> some View {

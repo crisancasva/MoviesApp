@@ -89,7 +89,7 @@ extension TabBarViewApp {
 
 #Preview {TabBarViewApp(items:
     [
-    TabBarViewApp.Item(view: AnyView(MovieListView.buildMock()), icon: Image(systemName: "list.bullet"), title: "Todos"),
-    TabBarViewApp.Item(view: AnyView(MovieListView.buildMock()), icon: Image(systemName: "richtext.page.fill"), title: "Detalle")
+        TabBarViewApp.Item(view: AnyView(MovieView.buildWeb()), icon: Image(systemName: "square.grid.2x2.fill"), title: "Peliculas"),
+        TabBarViewApp.Item(view: AnyView(MovieView.buildDB()), icon: Image(systemName: "star.fill"), title: "Favoritos")
 ])
 }

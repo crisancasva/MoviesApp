@@ -6,7 +6,7 @@
 //
 import SwiftUI
 
-struct DetailViewCell: View {
+struct DetailViewCell<Movie: MovieEntity>: View {
     var movie: Results
     
     var body: some View {
@@ -15,13 +15,15 @@ struct DetailViewCell: View {
             }
             Spacer()
         }
+        .padding([.leading, .trailing], 16)
     }
     
     private func contentView(@ViewBuilder view: @escaping () -> some View) -> some View {
         HStack(alignment: .top, spacing: Spacing._sm){ view() }
-        .padding(Spacing._md)
-        .background(.neutral50)
-        .cornerRadius(20)
+            .background(Color.neutral0)
+            .cornerRadius(15)
+            .shadow(color: Color.neutral200, radius: 5, x: 1, y: 1)
+            .frame(maxHeight: 200)
         }
     
     private func movieInfotView(@ViewBuilder view: @escaping () -> some View) -> some View {
@@ -33,37 +35,42 @@ struct DetailViewCell: View {
                 self.dateLabel
                 self.votes
             }
-        }.padding(.leading, 20)
+        }
     }
     
     private var titleLabel: some View {
         
         TextTitle(text: self.movie.original_title, type: .small)
-            .padding(.bottom)
+            .foregroundColor(Color.neutral1000)
+            .padding(.top)
+        
     }
     private var dateLabel: some View {
         TextLabel(text: self.movie.releaseDateShortFormat)
-            
+            .font(.subheadline)
+            .foregroundColor(Color.neutral300)
         
     }
     private var releaseDate: some View{
-        TextLabel(text: "Fecha Lanzamiento")
+        TextLabel(text: "Fecha de Lanzamiento")
+            .font(.subheadline)
+            .padding(.top, 0.5)
+            .foregroundColor(Color.neutral300)
             
     }
     private var imagePoster: some View {
         AsyncImage(url: movie.urlPoster_path) { image in
             image
                 .resizable()
-                .frame(width: 100, height: 200)
-                .aspectRatio(contentMode: .fill)
+                .scaledToFill()
+                .frame(width: 130, height: 180)
+                .clipped()
         } placeholder: {
-            Color.gray.opacity(0.3)
+            Color.neutral200
+                .frame(width: 130, height: 180)
         }
-        
-        .clipped()
-        .cornerRadius(15)
-        
     }
+    
     private var votes: some View {
         let votes = Int((self.movie.vote_average / 1.0).rounded())
         
@@ -79,5 +86,5 @@ struct DetailViewCell: View {
 }
 
 #Preview {
-    DetailViewCell(movie: Results(dto: .mock))
+    DetailViewCell<Results>(movie: Results(dto: .mock))
 }

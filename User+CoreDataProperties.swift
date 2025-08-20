@@ -2,7 +2,7 @@
 //  User+CoreDataProperties.swift
 //  MoviesApp
 //
-//  Created by Cristhian Andres Castano Vallejo on 15/08/25.
+//  Created by Cristhian Andres Castano Vallejo on 17/08/25.
 //
 //
 
@@ -16,8 +16,7 @@ extension User {
         return NSFetchRequest<User>(entityName: "User")
     }
 
-    @NSManaged public var password: String?
-    @NSManaged public var username: String?
+    @NSManaged public var name: String?
 
 }
 

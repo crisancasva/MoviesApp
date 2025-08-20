@@ -9,7 +9,10 @@ import SwiftUI
 
 
 struct GenericList<Item: Identifiable, Cell: View>: View {
-    private let columns = [GridItem(.flexible(), spacing: Spacing._none)]
+    private var columns: Int = 1
+    private var gridColumns: [GridItem]{
+        Array(repeating: GridItem(.flexible(),spacing: Spacing._xs), count: columns)
+      }
     
     private var status: GenericListStatus<Item> = .loading
     private let cell: (Item) -> Cell
@@ -20,8 +23,9 @@ struct GenericList<Item: Identifiable, Cell: View>: View {
     private var isRefreshable: (() -> Void)?
     private var onCellSelected: ((Item) -> Void)?
     
-    init(status: GenericListStatus<Item>, cell: @escaping (Item) -> Cell) {
+    init(status: GenericListStatus<Item>, columns: Int, cell: @escaping (Item) -> Cell) {
         self.status = status
+        self.columns = columns
         self.cell = cell
     }
     
@@ -41,7 +45,7 @@ struct GenericList<Item: Identifiable, Cell: View>: View {
                         self.errorView?(message)
                             .transition(.opacity)
                     case .data(let items):
-                        LazyVGrid(columns: self.columns, spacing: Spacing._md) {
+                        LazyVGrid(columns: self.gridColumns, spacing: Spacing._lg) {
                             ForEach(items) { item in
                                 self.cell(item)
                                     .onTapGesture {
@@ -88,6 +92,12 @@ struct GenericList<Item: Identifiable, Cell: View>: View {
     func isRefreshable(_ value: (() -> Void)?) -> Self {
         var view = self
         view.isRefreshable = value
+        return view
+    }
+    
+    func columns(_ value: Int) -> Self {
+        var view = self
+        view.columns = value
         return view
     }
 }

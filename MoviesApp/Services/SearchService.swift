@@ -13,8 +13,7 @@ protocol SearchServiceProtocol {
     func execute(_ query: String) -> AnyPublisher<[ResultsDTO], ServiceErrorDTO>
 }
 struct SearchService: SearchServiceProtocol {
-    //    private let apiKey = "176de15e8c8523a92ff640f432966c9"
-   
+  
     func execute(_ query: String) -> AnyPublisher<[ResultsDTO], ServiceErrorDTO> {
         let urlString = "https://api.themoviedb.org/3/search/movie?api_key=176de15e8c8523a92ff640f432966c9c&language=es-ES&query=\(query)"
         

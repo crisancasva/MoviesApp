@@ -25,12 +25,10 @@ struct MovieDetailServices: MovieDetailServicesProtocol {
             .tryMap { response in
                 
                 if let data = response.data {
-                    print("📦 [MovieDetailServices] Bytes recibidos:", data.count)
-                    if let jsonString = String(data: data, encoding: .utf8) {
-                        print("📝 [MovieDetailServices] Respuesta JSON:\n", jsonString)
-                    }
+                    _ = String(data: data, encoding: .utf8) 
+                      
+                    
                 } else {
-                    print("⚠️ [MovieDetailServices] No se recibió data")
                     throw ServiceErrorDTO(statusCode: response.response?.statusCode ?? -1)
                 }
                 
